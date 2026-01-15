@@ -30,22 +30,20 @@ ${recentChat}
 `;
 
     if (userQuestion) {
-        prompt += `USER_QUERY: "${userQuestion}"\n\nRESPONSE_GUIDELINES: Answer the user's question directly and concisely in the context of the current position.\n`;
+        prompt += `USER_QUERY: "${userQuestion}"\n\nRESPONSE_GUIDELINES: Answer the user's question directly and concisely in the context of the current position. Keep it under 60 words.\n`;
     } else {
         prompt += `RESPONSE_GUIDELINES: 
-1. Briefly evaluate the User's last move (good/bad/dubious).
-2. Analyze Black's last move (why did they play it? what does it threaten?).
-3. Mention one alternative Black could have played if their move was weak.
-4. Summarize the new position (who has space/initiative?).
-5. Provide one high-level strategic goal for White.
+1. **Analysis**: Evaluate User's move and explain Black's reply (and threat) in 1-2 sentences.
+2. **Position**: Summarize who has the initiative and one alternative Black could have played.
+3. **Plan**: Provide one high-level strategic goal for White.
 \n`;
     }
 
     prompt += `
 VOICE:
 - High-intensity, professional analysis.
-- Max 8 lines of text.
-- Focus on "Why" and "What changed".
+- STRICT LIMIT: Max 500 characters total.
+- Max 3 bullet points.
 - No pleasantries.
 `;
 
