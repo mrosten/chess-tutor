@@ -47,46 +47,45 @@ VOICE:
 - No pleasantries.
 `;
 
+    // Resolve API Key
+    let apiKey = AI_CONFIG.OPENAI_API_KEY;
+    if (!apiKey) {
+        apiKey = localStorage.getItem('OPENAI_KEY');
+    }
+    if (!apiKey) {
+        apiKey = prompt("ENTER_OPENAI_KEY_FOR_TUTORING:");
+        if (apiKey) {
+            localStorage.setItem('OPENAI_KEY', apiKey);
+        } else {
+            return "[SYSTEM] API Key required for AI Tutor.";
+        }
+    }
+
     try {
-        const response = await fetch(`${AI_CONFIG.API_URL}?key=${AI_CONFIG.GEMINI_API_KEY}`, {
+        const response = await fetch(AI_CONFIG.API_URL, {
             method: 'POST',
             headers: {
+                'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                contents: [
-                    {
-                        role: "user",
-                        parts: [{ text: prompt }]
-                    }
+                model: AI_CONFIG.MODEL,
+                messages: [
+                    { role: 'system', content: 'You are a professional chess tutor running inside a DOS terminal.' },
+                    { role: 'user', content: prompt }
                 ],
-                generationConfig: {
-                    maxOutputTokens: 300,
-                    temperature: 0.7
-                }
+                temperature: 0.7,
+                stream: false
             })
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-
-            // DEBUG: List available models if 404
-            if (response.status === 404) {
-                try {
-                    const listResp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${AI_CONFIG.GEMINI_API_KEY}`);
-                    const listData = await listResp.json();
-                    console.log("[DEBUG] AVAIALBLE MODELS:", listData);
-                } catch (listErr) {
-                    console.error("[DEBUG] FAILED TO LIST MODELS:", listErr);
-                }
-            }
-
             throw new Error(`AI_API_ERROR: ${response.status} - ${errorText} (Model: ${AI_CONFIG.MODEL})`);
         }
 
         const data = await response.json();
-        // Gemini response structure: candidates[0].content.parts[0].text
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || "[ERROR] NO_CONTENT_RETURNED";
+        return data.choices?.[0]?.message?.content || "[ERROR] NO_CONTENT_RETURNED";
     } catch (e) {
         console.error('[AI_SERVICE] HANDSHAKE_FAILED:', e);
         return `[ERROR] CORE_CONNECTION_TIMEOUT: ${e.message}`;
