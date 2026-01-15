@@ -8,21 +8,24 @@ import { AI_CONFIG } from './ai-config.js';
  * @param {string} userQuestion Optional specific question from the user.
  * @returns {Promise<string>} The tutor's advice.
  */
-export async function getTutorAdvice(fen, history, evaluation, userQuestion = null) {
+export async function getTutorAdvice(fen, pgn, evaluation, userQuestion = null) {
+    const turnColor = fen.split(' ')[1] === 'w' ? 'White' : 'Black';
+
     let prompt = `You are a Grandmaster Chess Tutor inside a DOS terminal. 
-Analyze this chess position. 
+You are advising the WHITE player (User). The opponent is Stockfish (Black).
 
 CURRENT_STATE:
 - FEN: ${fen}
-- HISTORY: ${history.join(', ')}
+- PGN_HISTORY: ${pgn}
 - EVALUATION: ${evaluation}
+- SIDE_TO_MOVE: ${turnColor}
 
 `;
 
     if (userQuestion) {
-        prompt += `USER_QUERY: "${userQuestion}"\n\nRESPONSE_GUIDELINES: Answer the user's question directly and concisely.\n`;
+        prompt += `USER_QUERY: "${userQuestion}"\n\nRESPONSE_GUIDELINES: Answer the user's question directly and concisely in the context of the current position.\n`;
     } else {
-        prompt += `RESPONSE_GUIDELINES: Identify one major strategic theme or a direct threat.\n`;
+        prompt += `RESPONSE_GUIDELINES: Identify one major strategic theme or a direct threat for White.\n`;
     }
 
     prompt += `

@@ -51,10 +51,10 @@ engine.onMessage = (line) => {
                 // Trigger LLM strategic advice
                 const currentEval = engineEvalElement.innerText;
                 const currentFen = game.fen();
-                const currentHistory = game.history();
+                const currentPgn = game.pgn();
 
                 (async () => {
-                    const advice = await getTutorAdvice(currentFen, currentHistory, currentEval);
+                    const advice = await getTutorAdvice(currentFen, currentPgn, currentEval);
                     addTutorMessage("ai", `[TUTOR] ${advice}`);
                 })();
             } else {
