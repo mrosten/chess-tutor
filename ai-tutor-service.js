@@ -1,7 +1,7 @@
-const POE_API_KEY = "W6rAUupxCfmOhukrRbN4h5GOsQ9LwCUfdwMQnhHjlRM";
+import { AI_CONFIG } from './ai-config.js';
 
 /**
- * Fetches strategic advice from the LLM via Poe API.
+ * Fetches strategic advice from the LLM.
  * @param {string} fen Current board position in FEN format.
  * @param {string[]} history Array of moves played so far.
  * @param {string} evaluation Current engine evaluation score.
@@ -34,14 +34,14 @@ VOICE:
 `;
 
     try {
-        const response = await fetch('https://api.poe.com/v1/chat/completions', {
+        const response = await fetch(AI_CONFIG.API_URL, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${POE_API_KEY}`,
+                'Authorization': `Bearer ${AI_CONFIG.POE_API_KEY}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'GPT-4o-Mini',
+                model: AI_CONFIG.MODEL,
                 messages: [
                     { role: 'system', content: 'You are a professional chess tutor running inside a DOS terminal.' },
                     { role: 'user', content: prompt }
@@ -53,7 +53,7 @@ VOICE:
 
         if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(`POE_API_ERROR: ${response.status} - ${errorText} (Model: GPT-4o-Mini)`);
+            throw new Error(`AI_API_ERROR: ${response.status} - ${errorText} (Model: ${AI_CONFIG.MODEL})`);
         }
 
         const data = await response.json();
