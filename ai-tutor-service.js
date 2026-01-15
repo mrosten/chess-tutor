@@ -48,20 +48,22 @@ VOICE:
 `;
 
     try {
-        const response = await fetch(AI_CONFIG.API_URL, {
+        const response = await fetch(`${AI_CONFIG.API_URL}?key=${AI_CONFIG.GEMINI_API_KEY}`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${AI_CONFIG.POE_API_KEY}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: AI_CONFIG.MODEL,
-                messages: [
-                    { role: 'system', content: 'You are a professional chess tutor running inside a DOS terminal.' },
-                    { role: 'user', content: prompt }
+                contents: [
+                    {
+                        role: "user",
+                        parts: [{ text: prompt }]
+                    }
                 ],
-                temperature: 0.7,
-                stream: false
+                generationConfig: {
+                    maxOutputTokens: 300,
+                    temperature: 0.7
+                }
             })
         });
 
@@ -71,7 +73,8 @@ VOICE:
         }
 
         const data = await response.json();
-        return data.choices?.[0]?.message?.content || "[ERROR] NO_CONTENT_RETURNED";
+        // Gemini response structure: candidates[0].content.parts[0].text
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || "[ERROR] NO_CONTENT_RETURNED";
     } catch (e) {
         console.error('[AI_SERVICE] HANDSHAKE_FAILED:', e);
         return `[ERROR] CORE_CONNECTION_TIMEOUT: ${e.message}`;

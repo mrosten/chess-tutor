@@ -1,6 +1,6 @@
 export const AI_CONFIG = {
-    PROVIDER: "POE",
-    POE_API_KEY: "W6rAUupxCfmOhukrRbN4h5GOsQ9LwCUfdwMQnhHjlRM",
-    MODEL: "GPT-4o",
-    API_URL: "https://api.poe.com/v1/chat/completions"
+    PROVIDER: "GEMINI",
+    GEMINI_API_KEY: "AIzaSyCOUaXFoV5prla4WRzsj_x5cA1lZ7PxOU0",
+    MODEL: "gemini-1.5-flash",
+    API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 };
