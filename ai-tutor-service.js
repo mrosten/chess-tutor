@@ -34,30 +34,37 @@ VOICE:
 `;
 
     try {
-        const response = await fetch(AI_CONFIG.API_URL, {
+        const url = `${AI_CONFIG.API_URL}?key=${AI_CONFIG.API_KEY}`;
+
+        // Structure for Gemini API
+        const payload = {
+            contents: [{
+                role: 'user',
+                parts: [{ text: `SYSTEM_INSTRUCTIONS: You are a professional chess tutor running inside a DOS terminal.\n\n${prompt}` }]
+            }],
+            generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 200,
+            }
+        };
+
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${AI_CONFIG.POE_API_KEY}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                model: AI_CONFIG.MODEL,
-                messages: [
-                    { role: 'system', content: 'You are a professional chess tutor running inside a DOS terminal.' },
-                    { role: 'user', content: prompt }
-                ],
-                temperature: 0.7,
-                stream: false
-            })
+            body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(`AI_API_ERROR: ${response.status} - ${errorText} (Model: ${AI_CONFIG.MODEL})`);
+            throw new Error(`AI_API_ERROR: ${response.status} - ${errorText}`);
         }
 
         const data = await response.json();
-        return data.choices?.[0]?.message?.content || "[ERROR] NO_CONTENT_RETURNED";
+        const advice = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        return advice || "[ERROR] NO_CONTENT_RETURNED";
     } catch (e) {
         console.error('[AI_SERVICE] HANDSHAKE_FAILED:', e);
         return `[ERROR] CORE_CONNECTION_TIMEOUT: ${e.message}`;
