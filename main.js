@@ -335,7 +335,11 @@ terminalInput.addEventListener('keydown', async (e) => {
 });
 
 // Focus terminal on click anywhere in the container, but ONLY if not selecting text
+// And IGNORE clicks on the header/toggle bar itself
 document.querySelector('.terminal-container').addEventListener('mousedown', (e) => {
+    // If we click the header, we're toggling, not typing
+    if (e.target.closest('.terminal-header')) return;
+
     // If the click is on the history/chat text, let the user select it
     if (e.target.closest('.terminal-output')) return;
 
@@ -355,6 +359,11 @@ const terminalContainer = document.querySelector('.terminal-container');
 function toggleTerminal() {
     const isActive = terminalContainer.classList.toggle('active');
     if (toggleBtn) toggleBtn.innerText = isActive ? 'TERMINAL_OFF' : 'TERMINAL_ON';
+
+    // Ensure we see the header when collapsing
+    if (!isActive) {
+        terminalContainer.scrollTop = 0;
+    }
 }
 
 terminalHeader.addEventListener('click', toggleTerminal);
