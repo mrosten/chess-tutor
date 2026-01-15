@@ -26,13 +26,13 @@ CURRENT_STATE:
     if (userQuestion) {
         prompt += `USER_QUERY: "${userQuestion}"\n\nRESPONSE_GUIDELINES: Answer the user's question directly and concisely in the context of the current position.\n`;
     } else {
-        prompt += `RESPONSE_GUIDELINES: Identify one major strategic theme or a direct threat for White.\n`;
+        prompt += `RESPONSE_GUIDELINES: Provide high-level strategic advice. Focus on concepts like space, piece activity, king safety, and long-term plans. DO NOT suggest specific moves unless there is an immediate tactical threat (mate or hanging piece).\n`;
     }
 
     prompt += `
 VOICE:
 - High-intensity, ultra-concise, professional.
-- Use square names (e4, d5).
+- Focus on concepts, not just moves.
 - Max 2 sentences.
 - No pleasantries.
 `;
