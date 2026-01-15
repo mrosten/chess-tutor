@@ -1,9 +1,12 @@
-import { Chess } from 'https://cdn.jsdelivr.net/npm/chess.js@1.0.0-beta.8/+esm';
+// import { Chess } from '...'; // Now loaded via index.html script tag
+const Chess = window.Chess;
 import engine from './stockfish-engine.js';
 import { getTutorAdvice } from './ai-tutor-service.js';
 
 console.log('[MAIN] Script loaded.');
+console.log('[MAIN] Chess object:', typeof Chess);
 const game = new Chess();
+console.log('[MAIN] Game initialized. FEN:', game.fen());
 const boardElement = document.getElementById('chess-board');
 const statusElement = document.getElementById('game-status');
 const moveListElement = document.getElementById('move-list');
