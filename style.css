@@ -80,6 +80,7 @@ main {
     align-items: center;
     justify-content: center;
     background: #000;
+    overflow: auto;
 }
 
 #board-wrapper {
