@@ -52,9 +52,10 @@ engine.onMessage = (line) => {
                 const currentEval = engineEvalElement.innerText;
                 const currentFen = game.fen();
                 const currentPgn = game.pgn();
+                const legalMoves = game.moves().join(', ');
 
                 (async () => {
-                    const advice = await getTutorAdvice(currentFen, currentPgn, currentEval);
+                    const advice = await getTutorAdvice(currentFen, currentPgn, currentEval, null, legalMoves);
                     addTutorMessage("ai", `[TUTOR] ${advice}`);
                 })();
             } else {

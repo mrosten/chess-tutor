@@ -8,7 +8,7 @@ import { AI_CONFIG } from './ai-config.js';
  * @param {string} userQuestion Optional specific question from the user.
  * @returns {Promise<string>} The tutor's advice.
  */
-export async function getTutorAdvice(fen, pgn, evaluation, userQuestion = null) {
+export async function getTutorAdvice(fen, pgn, evaluation, userQuestion = null, legalMoves = "") {
     const turnColor = fen.split(' ')[1] === 'w' ? 'White' : 'Black';
 
     let prompt = `You are a Grandmaster Chess Tutor inside a DOS terminal. 
@@ -19,6 +19,7 @@ CURRENT_STATE:
 - PGN_HISTORY: ${pgn}
 - EVALUATION: ${evaluation}
 - SIDE_TO_MOVE: ${turnColor}
+- LEGAL_MOVES_FOR_PLAYER: ${legalMoves}
 
 `;
 
