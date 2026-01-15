@@ -3,7 +3,7 @@ class StockfishEngine {
         console.log('[ENGINE] Initializing Stockfish...');
         try {
             console.log('[ENGINE] Using ASM version...');
-            this.worker = new Worker('/stockfish-asm.js');
+            this.worker = new Worker('public/stockfish-asm.js');
             this.onMessage = null;
 
             this.worker.onmessage = (event) => {
