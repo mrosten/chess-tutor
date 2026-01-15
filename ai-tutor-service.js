@@ -69,6 +69,18 @@ VOICE:
 
         if (!response.ok) {
             const errorText = await response.text();
+
+            // DEBUG: List available models if 404
+            if (response.status === 404) {
+                try {
+                    const listResp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${AI_CONFIG.GEMINI_API_KEY}`);
+                    const listData = await listResp.json();
+                    console.log("[DEBUG] AVAIALBLE MODELS:", listData);
+                } catch (listErr) {
+                    console.error("[DEBUG] FAILED TO LIST MODELS:", listErr);
+                }
+            }
+
             throw new Error(`AI_API_ERROR: ${response.status} - ${errorText} (Model: ${AI_CONFIG.MODEL})`);
         }
 
