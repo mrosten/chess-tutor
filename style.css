@@ -313,7 +313,16 @@ main {
 
     .game-container {
         flex: 1;
-        min-height: 50vh;
+        min-height: 0;
+        /* Allow shrinking */
+        padding: 5px;
+    }
+
+    #board-wrapper {
+        max-width: 90vw;
+        max-height: 90vw;
+        width: 100%;
+        margin: auto;
     }
 
     .terminal-container {
@@ -321,24 +330,22 @@ main {
         bottom: 0;
         left: 0;
         right: 0;
-        height: 40%;
+        height: 60%;
+        /* Taller drawer */
         width: 100%;
         flex: none;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 100;
+        background: rgba(0, 0, 0, 0.9);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
         transform: translateY(100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         border-left: none;
-        border-top: 1px solid var(--border-terminal);
+        border-top: 2px solid var(--terminal-green);
     }
 
     .terminal-container.active {
         transform: translateY(0);
-    }
-
-    #board-wrapper {
-        max-width: 95vw;
-        max-height: 95vw;
     }
 
     .thin-bar.bottom {

@@ -36,10 +36,23 @@ engine.onMessage = (line) => {
     if (line.startsWith('bestmove')) {
         const moveStr = line.split(' ')[1];
         if (moveStr && moveStr !== '(none)') {
-            game.move(moveStr);
-            renderBoard();
-            addTutorMessage("system", `[CPU_MOVE] ${game.history().slice(-1)[0]} EXECUTED.`);
-            isEngineThinking = false;
+            // Parse UCI move (e.g., "e2e4" or "e7e8q")
+            const from = moveStr.substring(0, 2);
+            const to = moveStr.substring(2, 4);
+            const promo = moveStr.substring(4, 5) || 'q';
+
+            console.log(`[ENGINE] Attempting move: ${from} -> ${to}`);
+            const move = game.move({ from, to, promotion: promo });
+
+            if (move) {
+                renderBoard();
+                addTutorMessage("system", `[CPU_MOVE] ${move.san} EXECUTED.`);
+                isEngineThinking = false;
+            } else {
+                console.error('[ENGINE] Invalid move from Stockfish:', moveStr);
+                isEngineThinking = false;
+                return;
+            }
 
             // Trigger LLM strategic advice
             const currentEval = engineEvalElement.innerText;
@@ -135,6 +148,13 @@ function handleSquareClick(square) {
 
                 addTutorMessage("ai", `[USER_MOVE] ${move.san} REGISTERED. ANALYZING...`);
                 isEngineThinking = true;
+
+                // On mobile, hide terminal so user sees the engine reply eventually
+                if (window.innerWidth <= 850) {
+                    terminalContainer.classList.remove('active');
+                    toggleBtn.innerText = 'TERMINAL_ON';
+                }
+
                 engine.analyze(game.fen());
             } else {
                 const piece = game.get(square);
@@ -280,6 +300,13 @@ terminalInput.addEventListener('keydown', async (e) => {
 
                 addTutorMessage("ai", `[USER_MOVE] ${move.san} REGISTERED. ANALYZING...`);
                 isEngineThinking = true;
+
+                // On mobile, hide terminal
+                if (window.innerWidth <= 850) {
+                    terminalContainer.classList.remove('active');
+                    toggleBtn.innerText = 'TERMINAL_ON';
+                }
+
                 engine.analyze(game.fen());
                 return;
             }
@@ -326,8 +353,12 @@ toggleBtn.addEventListener('click', () => {
 const originalAddTutorMessage = addTutorMessage;
 addTutorMessage = (type, text) => {
     originalAddTutorMessage(type, text);
-    // If it's a critical AI message and we're on mobile, maybe peek?
-    // For now, let the user manually toggle to keep it non-intrusive.
+
+    // On mobile, if the AI is giving advice, pop the terminal open
+    if (type === 'ai' && text.includes('[TUTOR]') && window.innerWidth <= 850) {
+        terminalContainer.classList.add('active');
+        toggleBtn.innerText = 'TERMINAL_OFF';
+    }
 };
 
 renderBoard();
