@@ -112,7 +112,7 @@ function renderBoard() {
 }
 
 function handleSquareClick(square) {
-    if (isEngineThinking || game.isGameOver()) return;
+    if (isEngineThinking || game.game_over()) return;
 
     if (selectedSquare === square) {
         selectedSquare = null;
@@ -190,13 +190,13 @@ function updateStatus() {
     const moveColor = game.turn() === 'b' ? 'BLACK' : 'WHITE';
     let status = `TURN: ${moveColor}`;
 
-    if (game.isCheckmate()) {
+    if (game.in_checkmate()) {
         status = `GAME_OVER: ${moveColor}_CHECKMATE`;
         addTutorMessage("ai", `[CRITICAL] CHECKMATE DETECTED.`);
-    } else if (game.isDraw()) {
+    } else if (game.in_draw()) {
         status = 'GAME_OVER: DRAW';
         addTutorMessage("ai", `[STATUS] DRAW DETECTED.`);
-    } else if (game.inCheck()) {
+    } else if (game.in_check()) {
         status += ' (IN_CHECK)';
     }
     statusElement.innerText = status;
