@@ -335,9 +335,17 @@ terminalInput.addEventListener('keydown', async (e) => {
     }
 });
 
-// Focus terminal on click anywhere in the container
-document.querySelector('.terminal-container').addEventListener('click', () => {
-    terminalInput.focus();
+// Focus terminal on click anywhere in the container, but ONLY if not selecting text
+document.querySelector('.terminal-container').addEventListener('mousedown', (e) => {
+    // If the click is on the history/chat text, let the user select it
+    if (e.target.closest('.terminal-output')) return;
+
+    // For other areas, focus the input on the next tick to avoid interrupting clicks
+    setTimeout(() => {
+        if (window.getSelection().toString().length === 0) {
+            terminalInput.focus();
+        }
+    }, 10);
 });
 
 // Mobile Toggle Logic
