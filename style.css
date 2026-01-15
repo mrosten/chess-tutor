@@ -83,11 +83,14 @@ main {
 }
 
 #board-wrapper {
-    width: 100%;
-    max-width: min(75vh, 75vw);
+    width: 95%;
+    max-width: min(calc(100vh - 150px), 75vw);
     aspect-ratio: 1 / 1;
     padding: 10px;
     border: 1px solid var(--border-terminal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #chess-board {
