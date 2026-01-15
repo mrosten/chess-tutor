@@ -30,6 +30,7 @@ const pieceMap = {
 
 let selectedSquare = null;
 let isEngineThinking = false;
+let chatHistory = [];
 
 // Engine Setup
 engine.onMessage = (line) => {
@@ -55,7 +56,7 @@ engine.onMessage = (line) => {
                 const legalMoves = game.moves().join(', ');
 
                 (async () => {
-                    const advice = await getTutorAdvice(currentFen, currentPgn, currentEval, null, legalMoves);
+                    const advice = await getTutorAdvice(currentFen, currentPgn, currentEval, null, legalMoves, chatHistory);
                     addTutorMessage("ai", `[TUTOR] ${advice}`);
                 })();
             } else {
@@ -207,6 +208,13 @@ function addTutorMessage(type, text) {
     msg.innerText = text;
     tutorChat.appendChild(msg);
     tutorChat.scrollTop = tutorChat.scrollHeight;
+
+    // Only store AI and User Chat (for history context)
+    if (type === 'ai' || type === 'user-chat') {
+        const role = type === 'ai' ? 'assistant' : 'user';
+        chatHistory.push({ role: role, content: text });
+        if (chatHistory.length > 20) chatHistory.shift(); // Keep last 20 messages
+    }
 }
 
 function updateStatus() {
@@ -317,18 +325,21 @@ terminalInput.addEventListener('keydown', async (e) => {
         }
 
         // FALLBACK: Input is a question/comment
-        addTutorMessage("system", `> ${input}`);
+        addTutorMessage("user-chat", `> ${input}`);
         terminalInput.disabled = true;
 
         try {
             const advice = await getTutorAdvice(
                 game.fen(),
-                game.history(),
+                game.pgn(),
                 engineEvalElement.innerText,
-                input
+                input,
+                game.moves().join(', '),
+                chatHistory
             );
             addTutorMessage("ai", `[TUTOR] ${advice}`);
         } catch (err) {
+            console.error(err);
             addTutorMessage("system", `[ERROR] COMMAND_EXECUTION_FAILED.`);
         } finally {
             terminalInput.disabled = false;

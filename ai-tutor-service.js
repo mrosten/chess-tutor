@@ -8,8 +8,11 @@ import { AI_CONFIG } from './ai-config.js';
  * @param {string} userQuestion Optional specific question from the user.
  * @returns {Promise<string>} The tutor's advice.
  */
-export async function getTutorAdvice(fen, pgn, evaluation, userQuestion = null, legalMoves = "") {
+export async function getTutorAdvice(fen, pgn, evaluation, userQuestion = null, legalMoves = "", chatHistory = []) {
     const turnColor = fen.split(' ')[1] === 'w' ? 'White' : 'Black';
+
+    // Format history for the prompt
+    const recentChat = chatHistory.map(msg => `${msg.role.toUpperCase()}: ${msg.content}`).join('\n');
 
     let prompt = `You are a Grandmaster Chess Tutor inside a DOS terminal. 
 You are advising the WHITE player (User). The opponent is Stockfish (Black).
@@ -20,6 +23,9 @@ CURRENT_STATE:
 - EVALUATION: ${evaluation}
 - SIDE_TO_MOVE: ${turnColor}
 - LEGAL_MOVES_FOR_PLAYER: ${legalMoves}
+
+RECENT_CHAT_HISTORY:
+${recentChat}
 
 `;
 
