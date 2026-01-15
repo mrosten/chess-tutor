@@ -250,6 +250,8 @@ main {
     background: #000;
     min-height: 48px;
     /* Force touch target size */
+    padding-bottom: 20px;
+    /* Lift text significantly for safer typing area */
 }
 
 .prompt-char {
@@ -431,12 +433,28 @@ main {
     }
 
     .thin-bar.bottom {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
         height: auto;
-        padding: 8px 15px;
+        padding: 12px 15px;
+        /* Taller touch area */
+        z-index: 200;
+        /* Always on top */
+        background: #000;
+        /* Opaque background */
+        border-top: 1px solid var(--terminal-green);
     }
 
     .status-strip {
         flex-wrap: wrap;
         gap: 10px;
+        justify-content: center;
+    }
+
+    /* Add padding to app to prevent content being hidden behind fixed footer */
+    #app {
+        padding-bottom: 60px;
     }
 }
