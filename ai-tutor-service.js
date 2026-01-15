@@ -14,7 +14,7 @@ Analyze this chess position.
 
 CURRENT_STATE:
 - FEN: ${fen}
-- HISTORY: ${history.slice(-10).join(', ')}
+- HISTORY: ${history.join(', ')}
 - EVALUATION: ${evaluation}
 
 `;
