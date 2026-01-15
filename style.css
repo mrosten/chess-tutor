@@ -248,6 +248,8 @@ main {
     position: relative;
     cursor: text;
     background: #000;
+    min-height: 48px;
+    /* Force touch target size */
 }
 
 .prompt-char {
@@ -383,16 +385,44 @@ main {
         width: 100%;
         flex: none;
         background: #000;
-        overflow: hidden;
-        transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Allow seeing output but force space */
+        display: flex;
+        flex-direction: column;
+        border-right: none;
         border-left: none;
         border-top: 1px solid var(--border-terminal);
         z-index: 100;
     }
 
+    /* Important: Ensure prompt is visible even when 'closed' if we want user to type */
+    /* REVISION: On mobile, 'closed' terminal is just the header. 
+       We will make 'active' terminal cover nearly half screen.
+    */
+
+    .terminal-output {
+        flex: 1;
+        display: none;
+        /* Hide output when collapsed to save space */
+    }
+
+    .dos-prompt {
+        display: none;
+        /* Hide prompt when collapsed to save space */
+    }
+
+    .terminal-container.active .terminal-output {
+        display: block;
+    }
+
+    .terminal-container.active .dos-prompt {
+        display: flex;
+        /* Show prompt only when active */
+    }
+
     .terminal-container.active {
-        height: 40vh;
-        border-top: 1px solid var(--terminal-green);
+        height: 50vh;
+        /* More space for chat */
+        border-top: 2px solid var(--terminal-green);
     }
 
     /* Hide the old toggle button since the bar is the toggle now */
