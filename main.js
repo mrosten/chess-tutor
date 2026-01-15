@@ -110,6 +110,15 @@ function renderBoard() {
                 square.appendChild(fileLabel);
             }
 
+            // Highlight Last Move
+            const history = game.history({ verbose: true });
+            if (history.length > 0) {
+                const lastMove = history[history.length - 1];
+                if (squareName === lastMove.from || squareName === lastMove.to) {
+                    square.classList.add('last-move');
+                }
+            }
+
             const piece = board[r][c];
             if (piece) {
                 const img = document.createElement('img');
