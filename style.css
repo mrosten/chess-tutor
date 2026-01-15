@@ -163,14 +163,16 @@ main {
 }
 
 .terminal-header {
+    height: 36px;
     background: var(--border-terminal);
     color: var(--terminal-green);
-    padding: 6px 15px;
+    padding: 0 15px;
     font-size: 0.75rem;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .terminal-header::after {
@@ -348,15 +350,17 @@ main {
 
     .terminal-container {
         position: relative;
-        height: 28px;
-        /* Height of the header bar */
+        height: 36px;
+        /* Match header height */
+        min-height: 36px;
         width: 100%;
         flex: none;
         background: #000;
         overflow: hidden;
-        transition: height 0.3s ease-out;
+        transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         border-left: none;
         border-top: 1px solid var(--border-terminal);
+        z-index: 100;
     }
 
     .terminal-container.active {

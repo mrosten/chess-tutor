@@ -302,9 +302,8 @@ terminalInput.addEventListener('keydown', async (e) => {
                 isEngineThinking = true;
 
                 // On mobile, hide terminal
-                if (window.innerWidth <= 850) {
-                    terminalContainer.classList.remove('active');
-                    toggleBtn.innerText = 'TERMINAL_ON';
+                if (window.innerWidth <= 850 && terminalContainer.classList.contains('active')) {
+                    toggleTerminal();
                 }
 
                 engine.analyze(game.fen());
@@ -368,9 +367,10 @@ addTutorMessage = (type, text) => {
 
     // On mobile, if the AI is giving advice, pop the terminal open
     if (type === 'ai' && text.includes('[TUTOR]') && window.innerWidth <= 850) {
-        terminalContainer.classList.add('active');
-        toggleBtn.innerText = 'TERMINAL_OFF';
+        if (!terminalContainer.classList.contains('active')) {
+            toggleTerminal();
+        }
     }
-};
+}
 
 renderBoard();
