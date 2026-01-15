@@ -348,14 +348,18 @@ document.querySelector('.terminal-container').addEventListener('mousedown', (e) 
     }, 10);
 });
 
-// Mobile Toggle Logic
+// Mobile Toggle Logic (Header Bar)
+const terminalHeader = document.querySelector('.terminal-header');
 const toggleBtn = document.getElementById('toggle-terminal');
 const terminalContainer = document.querySelector('.terminal-container');
 
-toggleBtn.addEventListener('click', () => {
+function toggleTerminal() {
     const isActive = terminalContainer.classList.toggle('active');
-    toggleBtn.innerText = isActive ? 'TERMINAL_OFF' : 'TERMINAL_ON';
-});
+    if (toggleBtn) toggleBtn.innerText = isActive ? 'TERMINAL_OFF' : 'TERMINAL_ON';
+}
+
+terminalHeader.addEventListener('click', toggleTerminal);
+if (toggleBtn) toggleBtn.addEventListener('click', toggleTerminal);
 
 // Update addTutorMessage to ensure visibility on mobile when AI speaks
 const originalAddTutorMessage = addTutorMessage;

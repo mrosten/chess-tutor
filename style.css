@@ -165,8 +165,21 @@ main {
 .terminal-header {
     background: var(--border-terminal);
     color: var(--terminal-green);
-    padding: 4px 10px;
+    padding: 6px 15px;
     font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.terminal-header::after {
+    content: '[+]';
+    font-family: monospace;
+}
+
+.terminal-container.active .terminal-header::after {
+    content: '[-]';
 }
 
 .terminal-output {
@@ -335,19 +348,25 @@ main {
 
     .terminal-container {
         position: relative;
-        height: 0;
+        height: 28px;
+        /* Height of the header bar */
         width: 100%;
         flex: none;
         background: #000;
         overflow: hidden;
         transition: height 0.3s ease-out;
         border-left: none;
-        border-top: 0px solid var(--terminal-green);
+        border-top: 1px solid var(--border-terminal);
     }
 
     .terminal-container.active {
-        height: 35vh;
+        height: 40vh;
         border-top: 1px solid var(--terminal-green);
+    }
+
+    /* Hide the old toggle button since the bar is the toggle now */
+    #toggle-terminal {
+        display: none !important;
     }
 
     .thin-bar.bottom {
