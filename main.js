@@ -36,38 +36,40 @@ engine.onMessage = (line) => {
     if (line.startsWith('bestmove')) {
         const moveStr = line.split(' ')[1];
         if (moveStr && moveStr !== '(none)') {
-            // Parse UCI move (e.g., "e2e4" or "e7e8q")
             const from = moveStr.substring(0, 2);
             const to = moveStr.substring(2, 4);
             const promo = moveStr.substring(4, 5) || 'q';
 
-            console.log(`[ENGINE] Attempting move: ${from} -> ${to}`);
+            console.log(`[ENGINE] RECEIVED_MOVE: ${moveStr}`);
             const move = game.move({ from, to, promotion: promo });
 
             if (move) {
                 renderBoard();
                 addTutorMessage("system", `[CPU_MOVE] ${move.san} EXECUTED.`);
                 isEngineThinking = false;
+
+                // Trigger LLM strategic advice
+                const currentEval = engineEvalElement.innerText;
+                const currentFen = game.fen();
+                const currentHistory = game.history();
+
+                (async () => {
+                    const advice = await getTutorAdvice(currentFen, currentHistory, currentEval);
+                    addTutorMessage("ai", `[TUTOR] ${advice}`);
+                })();
             } else {
-                console.error('[ENGINE] Invalid move from Stockfish:', moveStr);
+                console.error('[ENGINE] FAILED_TO_APPLY_MOVE:', moveStr);
                 isEngineThinking = false;
-                return;
             }
-
-            // Trigger LLM strategic advice
-            const currentEval = engineEvalElement.innerText;
-            const currentFen = game.fen();
-            const currentHistory = game.history();
-
-            (async () => {
-                const advice = await getTutorAdvice(currentFen, currentHistory, currentEval);
-                addTutorMessage("ai", `[TUTOR] ${advice}`);
-            })();
+        } else {
+            isEngineThinking = false;
         }
     } else if (line.includes('score cp')) {
         const parts = line.split(' ');
         const scoreIdx = parts.indexOf('cp') + 1;
         const score = parseInt(parts[scoreIdx]) / 100;
+        // If it's black's turn, the score from Stockfish is relative to black. 
+        // We usually show evaluation from White's perspective.
         const evalScore = game.turn() === 'b' ? -score : score;
         engineEvalElement.innerText = `EVAL: ${evalScore > 0 ? '+' : ''}${evalScore.toFixed(2)}`;
     } else if (line.includes('score mate')) {
