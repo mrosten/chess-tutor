@@ -32,14 +32,20 @@ ${recentChat}
     if (userQuestion) {
         prompt += `USER_QUERY: "${userQuestion}"\n\nRESPONSE_GUIDELINES: Answer the user's question directly and concisely in the context of the current position.\n`;
     } else {
-        prompt += `RESPONSE_GUIDELINES: Provide high-level strategic advice. Focus on concepts like space, piece activity, king safety, and long-term plans. DO NOT suggest specific moves unless there is an immediate tactical threat (mate or hanging piece).\n`;
+        prompt += `RESPONSE_GUIDELINES: 
+1. Briefly evaluate the User's last move (good/bad/dubious).
+2. Analyze Black's last move (why did they play it? what does it threaten?).
+3. Mention one alternative Black could have played if their move was weak.
+4. Summarize the new position (who has space/initiative?).
+5. Provide one high-level strategic goal for White.
+\n`;
     }
 
     prompt += `
 VOICE:
-- High-intensity, ultra-concise, professional.
-- Focus on concepts, not just moves.
-- Max 2 sentences.
+- High-intensity, professional analysis.
+- Max 3-4 sentences.
+- Focus on "Why" and "What changed".
 - No pleasantries.
 `;
 
