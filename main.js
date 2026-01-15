@@ -313,4 +313,21 @@ document.querySelector('.terminal-container').addEventListener('click', () => {
     terminalInput.focus();
 });
 
+// Mobile Toggle Logic
+const toggleBtn = document.getElementById('toggle-terminal');
+const terminalContainer = document.querySelector('.terminal-container');
+
+toggleBtn.addEventListener('click', () => {
+    const isActive = terminalContainer.classList.toggle('active');
+    toggleBtn.innerText = isActive ? 'TERMINAL_OFF' : 'TERMINAL_ON';
+});
+
+// Update addTutorMessage to ensure visibility on mobile when AI speaks
+const originalAddTutorMessage = addTutorMessage;
+addTutorMessage = (type, text) => {
+    originalAddTutorMessage(type, text);
+    // If it's a critical AI message and we're on mobile, maybe peek?
+    // For now, let the user manually toggle to keep it non-intrusive.
+};
+
 renderBoard();
