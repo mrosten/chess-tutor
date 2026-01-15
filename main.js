@@ -1,4 +1,4 @@
-import { Chess } from 'chess.js';
+import { Chess } from 'https://cdn.skypack.dev/chess.js';
 import engine from './stockfish-engine.js';
 import { getTutorAdvice } from './ai-tutor-service.js';
 
