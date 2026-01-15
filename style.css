@@ -205,6 +205,19 @@ main {
     word-break: break-word;
     -webkit-user-select: text;
     user-select: text;
+    max-height: 12em;
+    /* Approx 8-9 lines */
+    overflow-y: auto;
+    padding-right: 5px;
+    /* Space for scrollbar */
+}
+
+.message::-webkit-scrollbar {
+    width: 3px;
+}
+
+.message::-webkit-scrollbar-thumb {
+    background: var(--border-terminal);
 }
 
 .message.system {

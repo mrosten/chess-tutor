@@ -44,7 +44,7 @@ ${recentChat}
     prompt += `
 VOICE:
 - High-intensity, professional analysis.
-- Max 3-4 sentences.
+- Max 8 lines of text.
 - Focus on "Why" and "What changed".
 - No pleasantries.
 `;
