@@ -337,15 +337,19 @@ main {
     .game-container {
         flex: 1;
         min-height: 0;
-        /* Allow shrinking */
         padding: 5px;
+        overflow: hidden;
+        /* Prevent scrolling board on mobile */
     }
 
     #board-wrapper {
-        max-width: 90vw;
-        max-height: 90vw;
         width: 100%;
-        margin: auto;
+        max-width: 90vw;
+        max-height: calc(100dvh - 180px);
+        /* Conservative height to fit all UI bars */
+        aspect-ratio: 1 / 1;
+        margin: 10px auto;
+        /* Margin top/bottom only */
     }
 
     .terminal-container {
