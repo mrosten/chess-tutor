@@ -41,7 +41,7 @@ VOICE:
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'google-gemini-pro',
+                model: 'GPT-4o-Mini',
                 messages: [
                     { role: 'system', content: 'You are a professional chess tutor running inside a DOS terminal.' },
                     { role: 'user', content: prompt }
@@ -53,7 +53,7 @@ VOICE:
 
         if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(`POE_API_ERROR: ${response.status} - ${errorText} (Model: google-gemini-pro)`);
+            throw new Error(`POE_API_ERROR: ${response.status} - ${errorText} (Model: GPT-4o-Mini)`);
         }
 
         const data = await response.json();
