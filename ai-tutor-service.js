@@ -49,17 +49,6 @@ VOICE:
 
     // Resolve API Key
     let apiKey = AI_CONFIG.OPENAI_API_KEY;
-    if (!apiKey) {
-        apiKey = localStorage.getItem('OPENAI_KEY');
-    }
-    if (!apiKey) {
-        apiKey = prompt("ENTER_OPENAI_KEY_FOR_TUTORING:");
-        if (apiKey) {
-            localStorage.setItem('OPENAI_KEY', apiKey);
-        } else {
-            return "[SYSTEM] API Key required for AI Tutor.";
-        }
-    }
 
     try {
         const response = await fetch(AI_CONFIG.API_URL, {
@@ -81,6 +70,12 @@ VOICE:
 
         if (!response.ok) {
             const errorText = await response.text();
+
+            if (response.status === 401) {
+                localStorage.removeItem('OPENAI_KEY');
+                return "[SYSTEM] Invalid API Key detected and cleared. Please make another move to re-enter your key.";
+            }
+
             throw new Error(`AI_API_ERROR: ${response.status} - ${errorText} (Model: ${AI_CONFIG.MODEL})`);
         }
 
