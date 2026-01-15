@@ -128,6 +128,16 @@ main {
     background: rgba(0, 255, 65, 0.1) !important;
 }
 
+.square.capture-hint {
+    background-color: rgba(0, 255, 65, 0.3);
+    /* Green highlight for possible moves */
+}
+
+/* Use inset shadow to avoid layout shift */
+.square.last-move {
+    box-shadow: inset 0 0 0 100px rgba(255, 255, 0, 0.2) !important;
+}
+
 .square.possible-move::after {
     content: '';
     width: 20%;
